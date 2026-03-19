@@ -1,58 +1,87 @@
 import { motion } from "framer-motion";
 
 const heatzones = [
-  { x: 55, y: 35, intensity: "high", label: "Vice Beach" },
-  { x: 30, y: 60, intensity: "medium", label: "Port District" },
-  { x: 70, y: 70, intensity: "low", label: "Everglades" },
-  { x: 45, y: 20, intensity: "high", label: "Downtown" },
-  { x: 80, y: 45, intensity: "medium", label: "Little Havana" },
+  { x: 55, y: 35, intensity: "high" as const, label: "Vice Beach" },
+  { x: 30, y: 60, intensity: "medium" as const, label: "Port District" },
+  { x: 70, y: 70, intensity: "low" as const, label: "Everglades" },
+  { x: 45, y: 20, intensity: "high" as const, label: "Downtown" },
+  { x: 80, y: 45, intensity: "medium" as const, label: "Little Havana" },
 ];
 
 const intensityColors = {
-  high: { fill: "hsl(300, 100%, 50%)", glow: "hsl(300 100% 50% / 0.6)" },
-  medium: { fill: "hsl(30, 100%, 55%)", glow: "hsl(30 100% 55% / 0.5)" },
-  low: { fill: "hsl(180, 100%, 50%)", glow: "hsl(180 100% 50% / 0.4)" },
+  high: { fill: "hsl(300, 100%, 50%)", glow: "hsl(300 100% 50% / 0.6)", ring: "hsl(300 100% 50% / 0.3)" },
+  medium: { fill: "hsl(45, 100%, 55%)", glow: "hsl(45 100% 55% / 0.5)", ring: "hsl(45 100% 55% / 0.2)" },
+  low: { fill: "hsl(180, 100%, 50%)", glow: "hsl(180 100% 50% / 0.4)", ring: "hsl(180 100% 50% / 0.2)" },
 };
 
 const Minimap = () => {
   return (
     <motion.div
-      className="glass-surface-strong rounded-lg p-4 relative overflow-hidden"
+      className="glass-holographic rounded-xl p-4 relative overflow-hidden holo-border flex-1"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.9 }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-display text-xs tracking-[0.3em] text-muted-foreground">ACTIVE HEATZONES</h2>
-        <div className="flex items-center gap-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-neon-magenta animate-pulse-glow" />
-          <span className="font-display text-[9px] text-neon-magenta tracking-wider">LIVE</span>
+        <div className="flex items-center gap-2">
+          <motion.div
+            className="w-1.5 h-1.5 rounded-full bg-neon-magenta"
+            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <h2 className="font-display text-[10px] tracking-[0.3em] text-muted-foreground">ACTIVE HEATZONES</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="font-display text-[8px] text-muted-foreground tracking-wider">SCANNING</span>
+          <motion.div
+            className="w-3 h-3 rounded-full border border-neon-cyan/40"
+            style={{ borderTopColor: "hsl(180 100% 50%)" }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
         </div>
       </div>
 
       {/* Map area */}
-      <div className="relative w-full aspect-[16/9] rounded-md overflow-hidden bg-muted/30 border border-border/50">
-        {/* Grid lines */}
+      <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-muted/20 border border-border/30">
+        {/* Grid */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {[20, 40, 60, 80].map((v) => (
+          {[10, 20, 30, 40, 50, 60, 70, 80, 90].map((v) => (
             <g key={v}>
-              <line x1={v} y1="0" x2={v} y2="100" stroke="hsl(0 0% 100% / 0.05)" strokeWidth="0.3" />
-              <line x1="0" y1={v} x2="100" y2={v} stroke="hsl(0 0% 100% / 0.05)" strokeWidth="0.3" />
+              <line x1={v} y1="0" x2={v} y2="100" stroke="hsl(240 10% 20% / 0.3)" strokeWidth="0.2" />
+              <line x1="0" y1={v} x2="100" y2={v} stroke="hsl(240 10% 20% / 0.3)" strokeWidth="0.2" />
             </g>
           ))}
           {/* Coastline */}
           <path
             d="M 10,15 Q 25,10 40,18 T 70,12 Q 85,15 95,20 L 95,95 L 5,95 Z"
-            fill="hsl(180 100% 50% / 0.03)"
-            stroke="hsl(180 100% 50% / 0.15)"
-            strokeWidth="0.5"
+            fill="hsl(180 100% 50% / 0.02)"
+            stroke="hsl(180 100% 50% / 0.12)"
+            strokeWidth="0.4"
           />
+          {/* Roads */}
+          <path d="M 20,20 L 80,80" stroke="hsl(0 0% 100% / 0.05)" strokeWidth="0.3" strokeDasharray="2,2" />
+          <path d="M 50,10 L 50,90" stroke="hsl(0 0% 100% / 0.05)" strokeWidth="0.3" strokeDasharray="2,2" />
+          <path d="M 10,50 L 90,50" stroke="hsl(0 0% 100% / 0.05)" strokeWidth="0.3" strokeDasharray="2,2" />
         </svg>
+
+        {/* Radar sweep */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <motion.div
+            className="w-full h-full"
+            style={{
+              background: "conic-gradient(from 0deg, transparent 0deg, hsl(180 100% 50% / 0.06) 30deg, transparent 60deg)",
+              transformOrigin: "center",
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
 
         {/* Heatzones */}
         {heatzones.map((zone, i) => {
-          const colors = intensityColors[zone.intensity as keyof typeof intensityColors];
+          const colors = intensityColors[zone.intensity];
           return (
             <motion.div
               key={zone.label}
@@ -62,33 +91,48 @@ const Minimap = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.2 + i * 0.15, duration: 0.5, type: "spring", damping: 15 }}
             >
-              {/* Pulse ring */}
+              {/* Outer pulse ring */}
               <motion.div
-                className="absolute inset-0 rounded-full"
+                className="absolute rounded-full"
                 style={{
-                  width: 24,
-                  height: 24,
-                  marginLeft: -12,
-                  marginTop: -12,
-                  border: `1px solid ${colors.fill}`,
-                  opacity: 0.3,
+                  width: 32, height: 32,
+                  marginLeft: -16, marginTop: -16,
+                  border: `1px solid ${colors.ring}`,
                 }}
-                animate={{ scale: [1, 2, 1], opacity: [0.3, 0, 0.3] }}
-                transition={{ duration: 2 + i * 0.3, repeat: Infinity }}
+                animate={{ scale: [1, 2.5, 1], opacity: [0.4, 0, 0.4] }}
+                transition={{ duration: 2.5 + i * 0.3, repeat: Infinity }}
               />
-              {/* Dot */}
+              {/* Inner pulse ring */}
+              <motion.div
+                className="absolute rounded-full"
+                style={{
+                  width: 20, height: 20,
+                  marginLeft: -10, marginTop: -10,
+                  border: `1px solid ${colors.ring}`,
+                }}
+                animate={{ scale: [1, 1.8, 1], opacity: [0.6, 0, 0.6] }}
+                transition={{ duration: 2 + i * 0.2, repeat: Infinity, delay: 0.3 }}
+              />
+              {/* Core dot */}
               <div
-                className="w-2.5 h-2.5 rounded-full relative z-10"
+                className="w-3 h-3 rounded-full relative z-10"
                 style={{
                   backgroundColor: colors.fill,
-                  boxShadow: `0 0 8px ${colors.glow}, 0 0 16px ${colors.glow}`,
+                  boxShadow: `0 0 10px ${colors.glow}, 0 0 20px ${colors.glow}, 0 0 40px ${colors.ring}`,
                 }}
               />
-              {/* Label */}
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                <span className="font-display text-[8px] tracking-wider text-foreground bg-card/80 px-2 py-0.5 rounded border border-border/50">
+              {/* Tooltip */}
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none">
+                <div
+                  className="font-display text-[8px] tracking-wider text-foreground px-2.5 py-1 rounded-md"
+                  style={{
+                    background: "hsl(240 12% 6% / 0.9)",
+                    border: `1px solid ${colors.ring}`,
+                    boxShadow: `0 0 10px ${colors.ring}`,
+                  }}
+                >
                   {zone.label}
-                </span>
+                </div>
               </div>
             </motion.div>
           );
@@ -96,15 +140,15 @@ const Minimap = () => {
       </div>
 
       {/* Legend */}
-      <div className="flex gap-4 mt-3 justify-center">
+      <div className="flex gap-5 mt-3 justify-center">
         {[
-          { label: "HIGH", color: "bg-neon-magenta" },
-          { label: "MED", color: "bg-orange-400" },
-          { label: "LOW", color: "bg-neon-cyan" },
+          { label: "CRITICAL", color: "bg-neon-magenta", shadow: "shadow-[0_0_6px_hsl(300_100%_50%/0.5)]" },
+          { label: "ACTIVE", color: "bg-yellow-400", shadow: "shadow-[0_0_6px_hsl(45_100%_55%/0.5)]" },
+          { label: "WATCH", color: "bg-neon-cyan", shadow: "shadow-[0_0_6px_hsl(180_100%_50%/0.5)]" },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-1.5">
-            <div className={`w-1.5 h-1.5 rounded-full ${item.color}`} />
-            <span className="font-display text-[8px] tracking-[0.2em] text-muted-foreground">{item.label}</span>
+            <div className={`w-2 h-2 rounded-full ${item.color} ${item.shadow}`} />
+            <span className="font-display text-[7px] tracking-[0.25em] text-muted-foreground">{item.label}</span>
           </div>
         ))}
       </div>
