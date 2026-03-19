@@ -9,7 +9,7 @@ interface CharacterData {
   image: string;
   color: string;
   colorHsl: string;
-  stats: { label: string; value: string }[];
+  stats: { label: string; value: number; max: number }[];
 }
 
 const characters: CharacterData[] = [
@@ -20,10 +20,10 @@ const characters: CharacterData[] = [
     color: "magenta",
     colorHsl: "300 100% 50%",
     stats: [
-      { label: "WANTED", value: "★★★☆☆" },
-      { label: "STAMINA", value: "87%" },
-      { label: "SHOOTING", value: "72%" },
-      { label: "DRIVING", value: "91%" },
+      { label: "WANTED", value: 3, max: 5 },
+      { label: "STAMINA", value: 87, max: 100 },
+      { label: "SHOOTING", value: 72, max: 100 },
+      { label: "DRIVING", value: 91, max: 100 },
     ],
   },
   {
@@ -33,103 +33,165 @@ const characters: CharacterData[] = [
     color: "cyan",
     colorHsl: "180 100% 50%",
     stats: [
-      { label: "WANTED", value: "★★★★☆" },
-      { label: "STAMINA", value: "93%" },
-      { label: "SHOOTING", value: "88%" },
-      { label: "DRIVING", value: "79%" },
+      { label: "WANTED", value: 4, max: 5 },
+      { label: "STAMINA", value: 93, max: 100 },
+      { label: "SHOOTING", value: 88, max: 100 },
+      { label: "DRIVING", value: 79, max: 100 },
     ],
   },
 ];
 
+const CircularStat = ({ value, max, label, color, delay }: { value: number; max: number; label: string; color: string; delay: number }) => {
+  const percentage = (value / max) * 100;
+  const circumference = 2 * Math.PI * 18;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+  return (
+    <motion.div
+      className="flex flex-col items-center gap-1"
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, duration: 0.5, type: "spring", damping: 15 }}
+    >
+      <div className="relative w-12 h-12">
+        <svg className="w-12 h-12 -rotate-90" viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="hsl(240 10% 15%)" strokeWidth="2" />
+          <motion.circle
+            cx="20" cy="20" r="18" fill="none"
+            stroke={`hsl(${color})`}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset }}
+            transition={{ delay: delay + 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ filter: `drop-shadow(0 0 4px hsl(${color} / 0.6))` }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="font-display text-[9px] font-bold text-foreground">
+            {label === "WANTED" ? `${value}/${max}` : `${value}`}
+          </span>
+        </div>
+      </div>
+      <span className="font-display text-[7px] tracking-[0.2em] text-muted-foreground">{label}</span>
+    </motion.div>
+  );
+};
+
 const CharacterSwitcher = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [hovered, setHovered] = useState<number | null>(null);
-
   const activeChar = characters[activeIndex];
 
   return (
     <motion.div
-      className="glass-surface-strong rounded-lg overflow-hidden relative"
+      className="glass-holographic rounded-xl overflow-hidden relative holo-border"
       initial={{ opacity: 0, x: -60 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
     >
-      {/* Background bleed effect */}
+      {/* Ambient bleed */}
       <AnimatePresence>
         <motion.div
           key={activeChar.color}
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle at ${activeIndex === 0 ? '30%' : '70%'} 50%, hsl(${activeChar.colorHsl} / 0.4), transparent 70%)`,
+            background: `
+              radial-gradient(circle at ${activeIndex === 0 ? "30%" : "70%"} 60%, hsl(${activeChar.colorHsl} / 0.15), transparent 60%),
+              radial-gradient(circle at 50% 0%, hsl(${activeChar.colorHsl} / 0.08), transparent 50%)
+            `,
           }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.2 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
         />
       </AnimatePresence>
 
       {/* Header */}
       <div className="px-5 pt-4 pb-2 flex items-center justify-between relative z-10">
-        <h2 className="font-display text-xs tracking-[0.3em] text-muted-foreground">CHARACTER HUD</h2>
-        <div className="flex gap-1">
+        <div className="flex items-center gap-2">
+          <motion.div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ backgroundColor: `hsl(${activeChar.colorHsl})` }}
+            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <h2 className="font-display text-[10px] tracking-[0.3em] text-muted-foreground">CHARACTER HUD</h2>
+        </div>
+        <div className="flex gap-1.5">
           {characters.map((char, i) => (
-            <button
+            <motion.button
               key={char.name}
               onClick={() => setActiveIndex(i)}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              className={`w-8 h-8 rounded-md flex items-center justify-center font-display text-[10px] font-bold transition-all duration-300 ${
+              className={`relative w-9 h-9 rounded-lg flex items-center justify-center font-display text-[10px] font-bold transition-all duration-300 overflow-hidden ${
                 activeIndex === i
-                  ? char.color === "magenta" ? "bg-neon-magenta/20 text-neon-magenta glow-magenta" : "bg-neon-cyan/20 text-neon-cyan glow-cyan"
-                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {char.name[0]}
-            </button>
+              {activeIndex === i && (
+                <motion.div
+                  className="absolute inset-0 rounded-lg"
+                  layoutId="activeCharTab"
+                  style={{
+                    background: `hsl(${char.colorHsl} / 0.2)`,
+                    border: `1px solid hsl(${char.colorHsl} / 0.4)`,
+                    boxShadow: `0 0 15px hsl(${char.colorHsl} / 0.3)`,
+                  }}
+                  transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                />
+              )}
+              <span className="relative z-10">{char.name[0]}</span>
+            </motion.button>
           ))}
         </div>
       </div>
 
       {/* Character display */}
-      <div className="relative flex items-end justify-center h-72 overflow-hidden">
+      <div className="relative flex items-end justify-center h-64 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeChar.name}
             className="absolute bottom-0 flex flex-col items-center"
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 1.05 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 40, scale: 0.9, rotateY: -15 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateY: 0 }}
+            exit={{ opacity: 0, y: -30, scale: 1.1, rotateY: 15 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <img
               src={activeChar.image}
               alt={activeChar.name}
-              className="h-64 object-contain drop-shadow-2xl"
+              className="h-56 object-contain"
               style={{
-                filter: `drop-shadow(0 0 30px hsl(${activeChar.colorHsl} / 0.4))`,
+                filter: `drop-shadow(0 0 40px hsl(${activeChar.colorHsl} / 0.5)) drop-shadow(0 20px 40px hsl(240 15% 3% / 0.8))`,
               }}
             />
           </motion.div>
         </AnimatePresence>
 
-        {/* Name overlay */}
-        <div className="absolute bottom-4 left-5 z-10">
+        {/* Name overlay with mega glow */}
+        <div className="absolute bottom-3 left-5 z-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeChar.name}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.4 }}
+              initial={{ opacity: 0, x: -30, filter: "blur(10px)" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, x: 30, filter: "blur(10px)" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               <h3
-                className="font-display text-3xl font-black"
-                style={{ color: `hsl(${activeChar.colorHsl})` }}
+                className="font-display text-2xl md:text-3xl font-black tracking-wider"
+                style={{
+                  color: `hsl(${activeChar.colorHsl})`,
+                  textShadow: `0 0 30px hsl(${activeChar.colorHsl} / 0.6), 0 0 60px hsl(${activeChar.colorHsl} / 0.3)`,
+                }}
               >
                 {activeChar.name}
               </h3>
-              <p className="font-body text-sm text-muted-foreground tracking-widest uppercase">
+              <p className="font-accent text-xs text-muted-foreground tracking-[0.3em] uppercase">
                 {activeChar.subtitle}
               </p>
             </motion.div>
@@ -137,20 +199,28 @@ const CharacterSwitcher = () => {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="px-5 pb-5 pt-3 grid grid-cols-2 gap-2 relative z-10">
-        {activeChar.stats.map((stat, i) => (
+      {/* Circular Stats */}
+      <div className="px-5 pb-5 pt-3 flex justify-between relative z-10">
+        <AnimatePresence mode="wait">
           <motion.div
-            key={`${activeChar.name}-${stat.label}`}
-            className="glass-surface rounded-md px-3 py-2"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * i, duration: 0.4 }}
+            key={activeChar.name}
+            className="flex justify-between w-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <div className="font-display text-[9px] tracking-[0.2em] text-muted-foreground">{stat.label}</div>
-            <div className="font-body text-sm font-semibold text-foreground">{stat.value}</div>
+            {activeChar.stats.map((stat, i) => (
+              <CircularStat
+                key={`${activeChar.name}-${stat.label}`}
+                value={stat.value}
+                max={stat.max}
+                label={stat.label}
+                color={activeChar.colorHsl}
+                delay={0.05 * i}
+              />
+            ))}
           </motion.div>
-        ))}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
