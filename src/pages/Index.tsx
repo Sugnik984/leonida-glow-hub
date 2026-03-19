@@ -1,16 +1,43 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import SkylineBackground from "@/components/SkylineBackground";
+import HeroHeader from "@/components/HeroHeader";
+import CharacterSwitcher from "@/components/CharacterSwitcher";
+import LeonidaFeed from "@/components/LeonidaFeed";
+import Minimap from "@/components/Minimap";
+import StatsBar from "@/components/StatsBar";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen relative overflow-hidden">
+      <SkylineBackground />
+
+      <div className="relative z-10 min-h-screen flex flex-col">
+        <HeroHeader />
+
+        {/* Stats bar */}
+        <div className="px-4 md:px-8 mt-4">
+          <StatsBar />
+        </div>
+
+        {/* Main content grid */}
+        <div className="flex-1 px-4 md:px-8 mt-4 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* Character Switcher - Left */}
+          <div className="lg:col-span-4 xl:col-span-3">
+            <CharacterSwitcher />
+          </div>
+
+          {/* Center - Map */}
+          <div className="lg:col-span-4 xl:col-span-5 flex flex-col gap-4">
+            <Minimap />
+          </div>
+
+          {/* Leonida Feed - Right */}
+          <div className="lg:col-span-4 xl:col-span-4">
+            <LeonidaFeed />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
