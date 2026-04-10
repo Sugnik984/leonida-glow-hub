@@ -47,7 +47,7 @@ const NeonCursor = () => {
       trail.current.forEach((p, i) => {
         p.age += 0.025;
         const alpha = Math.max(0, 1 - p.age);
-        const size = (1 - p.age) * 3;
+        const size = Math.max(0.01, (1 - p.age) * 3);
         ctx.beginPath();
         ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(${p.hue}, 100%, 60%, ${alpha * 0.6})`;
