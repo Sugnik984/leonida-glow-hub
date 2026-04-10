@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import skylineImg from "@/assets/vice-skyline.jpg";
+import cityVideo from "@/assets/city-background.mp4.asset.json";
 import CityLightsCanvas from "./CityLightsCanvas";
 
 const ParticleField = () => {
@@ -171,7 +172,15 @@ const SkylineBackground = () => {
         animate={{ scale: [1.08, 1.12, 1.08] }}
         transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
       >
-        <img src={skylineImg} alt="" className="w-full h-full object-cover" />
+        <video
+          src={cityVideo.url}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={skylineImg}
+          className="w-full h-full object-cover"
+        />
       </motion.div>
 
       {/* Traffic streaks layer */}
