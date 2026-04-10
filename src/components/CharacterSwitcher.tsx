@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import GlassPanel from "./GlassPanel";
 import luciaImg from "@/assets/lucia.png";
 import jasonImg from "@/assets/jason.png";
 
@@ -84,17 +85,12 @@ const CharacterSwitcher = () => {
   const activeChar = characters[activeIndex];
 
   return (
-    <motion.div
-      className="glass-holographic rounded-xl overflow-hidden relative holo-border"
-      initial={{ opacity: 0, x: -60 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-    >
+    <GlassPanel delay={0.5} from="left" glowColor={activeChar.colorHsl}>
       {/* Ambient bleed */}
       <AnimatePresence>
         <motion.div
           key={activeChar.color}
-          className="absolute inset-0"
+          className="absolute inset-0 z-0"
           style={{
             background: `
               radial-gradient(circle at ${activeIndex === 0 ? "30%" : "70%"} 60%, hsl(${activeChar.colorHsl} / 0.15), transparent 60%),
@@ -125,9 +121,7 @@ const CharacterSwitcher = () => {
               key={char.name}
               onClick={() => setActiveIndex(i)}
               className={`relative w-9 h-9 rounded-lg flex items-center justify-center font-display text-[10px] font-bold transition-all duration-300 overflow-hidden ${
-                activeIndex === i
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                activeIndex === i ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -152,6 +146,14 @@ const CharacterSwitcher = () => {
 
       {/* Character display */}
       <div className="relative flex items-end justify-center h-64 overflow-hidden">
+        {/* Energy aura */}
+        <motion.div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none"
+          style={{ backgroundColor: `hsl(${activeChar.colorHsl} / 0.15)` }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
         <AnimatePresence mode="wait">
           <motion.div
             key={activeChar.name}
@@ -161,18 +163,20 @@ const CharacterSwitcher = () => {
             exit={{ opacity: 0, y: -30, scale: 1.1, rotateY: 15 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <img
+            <motion.img
               src={activeChar.image}
               alt={activeChar.name}
               className="h-56 object-contain"
               style={{
                 filter: `drop-shadow(0 0 40px hsl(${activeChar.colorHsl} / 0.5)) drop-shadow(0 20px 40px hsl(240 15% 3% / 0.8))`,
               }}
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
         </AnimatePresence>
 
-        {/* Name overlay with mega glow */}
+        {/* Name overlay */}
         <div className="absolute bottom-3 left-5 z-10">
           <AnimatePresence mode="wait">
             <motion.div
@@ -222,7 +226,7 @@ const CharacterSwitcher = () => {
           </motion.div>
         </AnimatePresence>
       </div>
-    </motion.div>
+    </GlassPanel>
   );
 };
 
