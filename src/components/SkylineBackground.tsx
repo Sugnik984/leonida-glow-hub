@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import skylineImg from "@/assets/vice-skyline.jpg";
+import CityLightsCanvas from "./CityLightsCanvas";
 
 const ParticleField = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -175,6 +176,9 @@ const SkylineBackground = () => {
 
       {/* Traffic streaks layer */}
       <TrafficStreaks />
+
+      {/* City lights — pulsing windows, shooting stars, lightning */}
+      <CityLightsCanvas />
 
       {/* Fog layer - close parallax */}
       <div
