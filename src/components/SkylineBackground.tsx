@@ -172,7 +172,15 @@ const SkylineBackground = () => {
         animate={{ scale: [1.08, 1.12, 1.08] }}
         transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
       >
-        <img src={skylineImg} alt="" className="w-full h-full object-cover" />
+        <video
+          src={cityVideo.url}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={skylineImg}
+          className="w-full h-full object-cover"
+        />
       </motion.div>
 
       {/* Traffic streaks layer */}
