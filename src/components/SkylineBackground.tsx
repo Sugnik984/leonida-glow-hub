@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import skylineImg from "@/assets/vice-skyline.jpg";
+import cityVideo from "@/assets/city-background.mp4.asset.json";
 import CityLightsCanvas from "./CityLightsCanvas";
 
 const ParticleField = () => {
