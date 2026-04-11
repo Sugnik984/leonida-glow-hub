@@ -15,8 +15,8 @@ interface CharacterData {
 
 const characters: CharacterData[] = [
   {
-    name: "LUCIA",
-    subtitle: "The Survivor",
+    name: "VALENTINA",
+    subtitle: "The Viper",
     image: luciaImg,
     color: "magenta",
     colorHsl: "300 100% 50%",
@@ -28,7 +28,7 @@ const characters: CharacterData[] = [
     ],
   },
   {
-    name: "JASON",
+    name: "MARCUS",
     subtitle: "The Enforcer",
     image: jasonImg,
     color: "cyan",
