@@ -5,7 +5,7 @@ import LeonidaFeed from "@/components/LeonidaFeed";
 import Minimap from "@/components/Minimap";
 import StatsBar from "@/components/StatsBar";
 import WantedLevel from "@/components/WantedLevel";
-import QuickActions from "@/components/QuickActions";
+import QuickAccessMenu from "@/components/QuickAccessMenu";
 import DataHUD from "@/components/DataHUD";
 import NeonCursor from "@/components/NeonCursor";
 import { MouseProvider } from "@/hooks/useMousePosition";
@@ -16,6 +16,7 @@ const Index = () => {
       <div className="min-h-screen relative overflow-hidden">
         <NeonCursor />
         <SkylineBackground />
+        <QuickAccessMenu />
 
         <div className="relative z-10 min-h-screen flex flex-col">
           <HeroHeader />
@@ -36,7 +37,6 @@ const Index = () => {
             {/* Center column */}
             <div className="lg:col-span-5 flex flex-col gap-3">
               <Minimap />
-              <QuickActions />
               <DataHUD />
             </div>
 
