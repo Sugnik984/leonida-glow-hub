@@ -53,21 +53,11 @@ const HeroHeader = () => {
 
   return (
     <motion.div
-      className="relative z-10 flex flex-col items-center pt-6 pb-2"
+      className="relative z-10 flex flex-col items-center pt-14 md:pt-16 pb-2"
       initial={{ opacity: 0, y: -40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Corner HUD */}
-      <div className="absolute top-2 left-4 flex items-center gap-2 opacity-40">
-        <motion.div className="w-2 h-2 rounded-full bg-neon-magenta" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} />
-        <span className="font-display text-[8px] tracking-[0.4em] text-muted-foreground">SYS.ONLINE</span>
-      </div>
-      <div className="absolute top-2 right-4 flex items-center gap-2 opacity-40">
-        <span className="font-display text-[8px] tracking-[0.4em] text-muted-foreground">NEURAL.OS v6.0</span>
-        <motion.div className="w-2 h-2 rounded-full bg-neon-cyan" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity, delay: 1 }} />
-      </div>
-
       <VILogo />
 
       <motion.h1

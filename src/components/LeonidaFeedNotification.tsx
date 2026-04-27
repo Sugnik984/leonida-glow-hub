@@ -65,7 +65,7 @@ const LeonidaFeedNotification = () => {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-2 right-2 z-50">
       {/* ═══ COLLAPSED: Notification Bell ═══ */}
       <AnimatePresence>
         {!open && (
@@ -76,7 +76,7 @@ const LeonidaFeedNotification = () => {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="group relative flex items-center gap-2 pl-3 pr-4 py-2 rounded-full overflow-hidden"
+            className="group relative flex items-center gap-1.5 pl-2 pr-3 py-1 rounded-full overflow-hidden"
             style={{
               background: "linear-gradient(135deg, hsl(300 100% 50% / 0.12), hsl(180 100% 50% / 0.08))",
               border: "1px solid hsl(300 100% 50% / 0.35)",
@@ -118,7 +118,7 @@ const LeonidaFeedNotification = () => {
             </motion.div>
 
             {/* Live ticker text */}
-            <div className="flex items-center gap-2 max-w-[180px] overflow-hidden">
+            <div className="flex items-center gap-1.5 max-w-[140px] overflow-hidden">
               <motion.div
                 className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0"
                 animate={{ opacity: [0.4, 1, 0.4] }}

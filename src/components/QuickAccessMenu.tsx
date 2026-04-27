@@ -22,13 +22,13 @@ const QuickAccessMenu = () => {
 
   return (
     <div
-      className="fixed top-4 left-4 z-50"
+      className="fixed top-2 left-2 z-50"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
       {/* Trigger */}
       <motion.button
-        className="glass-holographic holo-border rounded-xl px-4 py-3 flex items-center gap-3 relative overflow-hidden group"
+        className="glass-holographic holo-border rounded-lg px-2.5 py-1.5 flex items-center gap-2 relative overflow-hidden group"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, x: -40 }}
@@ -40,16 +40,16 @@ const QuickAccessMenu = () => {
           animate={{ rotate: open ? 90 : 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
         >
-          <Menu size={18} style={{ color: "hsl(45 100% 55%)" }} />
+          <Menu size={13} style={{ color: "hsl(45 100% 55%)" }} />
         </motion.div>
-        <span className="font-display text-[10px] tracking-[0.3em] text-foreground">
+        <span className="font-display text-[8px] tracking-[0.3em] text-foreground">
           QUICK ACCESS
         </span>
         <motion.div
-          animate={{ x: open ? 4 : 0, opacity: open ? 1 : 0.5 }}
+          animate={{ x: open ? 3 : 0, opacity: open ? 1 : 0.5 }}
           transition={{ duration: 0.3 }}
         >
-          <ChevronRight size={14} style={{ color: "hsl(45 100% 55% / 0.7)" }} />
+          <ChevronRight size={11} style={{ color: "hsl(45 100% 55% / 0.7)" }} />
         </motion.div>
 
         {/* Pulse ring */}
