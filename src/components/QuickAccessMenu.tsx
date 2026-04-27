@@ -22,7 +22,7 @@ const QuickAccessMenu = () => {
 
   return (
     <div
-      className="fixed top-20 left-4 z-50"
+      className="fixed top-4 left-4 z-50"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
